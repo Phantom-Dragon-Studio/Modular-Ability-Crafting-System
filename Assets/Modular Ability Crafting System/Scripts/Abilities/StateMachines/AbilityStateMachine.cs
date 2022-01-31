@@ -14,13 +14,13 @@ namespace ModularAbilityCraftingSystem.Abilities.StateMachines
         [SerializeField] private AbilityStateMachineConfig config;
         private AbilityStateFactory _states;
         public AbilityBaseState CurrentState { get; set; }
+        public AbilityStateMachineConfig Config => config;
 
-        private void Awake()
-        {
+        private void Awake() {
             _states = new AbilityStateFactory(this);
             CurrentState = _states.Locked();
             CurrentState.EnterState();
-            Debug.Log("State Machine Awake: " + CurrentState.ToString(), this);
+            Debug.Log("State Machine Awake: " + CurrentState, this);
         }
 
         private void Update() {

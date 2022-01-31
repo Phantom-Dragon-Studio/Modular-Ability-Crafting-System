@@ -25,7 +25,7 @@ namespace ModularAbilityCraftingSystem.Abilities.StateMachines
         
         public AbilityBaseState Idle()
         {
-            return new IdleState(_context, this);
+            return new ReadyState(_context, this);
         } 
         
         public AbilityBaseState Cooldown()

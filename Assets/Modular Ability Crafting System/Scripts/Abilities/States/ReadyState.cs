@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ModularAbilityCraftingSystem.Abilities.States
 {
-    public class IdleState : AbilityBaseState
+    public class ReadyState : AbilityBaseState
     {
         public override void EnterState()
         {
@@ -29,6 +29,6 @@ namespace ModularAbilityCraftingSystem.Abilities.States
             throw new System.NotImplementedException();
         }
 
-        public IdleState(AbilityStateMachine context, AbilityStateFactory factory) : base(context, factory) { }
+        public ReadyState(AbilityStateMachine context, AbilityStateFactory factory) : base(context, factory) { }
     }
 }

@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd514da9eb274298ab229702beeb733f, type: 3}
   m_Name: Blast #2
   m_EditorClassIdentifier: 
-  _baseBlastRadius: 10
+  baseBlastRadius: 5
   abilityName: Blast #2
