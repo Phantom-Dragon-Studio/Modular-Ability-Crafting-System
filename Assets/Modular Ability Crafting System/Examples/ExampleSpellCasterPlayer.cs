@@ -3,14 +3,18 @@ using ModularAbilityCraftingSystem.Abilities.Interfaces;
 using ModularAbilityCraftingSystem.Sockets;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace ModularAbilityCraftingSystem.Examples
 {
     /// <summary>
     /// Example player controller demonstrating spell casting integration.
+    /// Uses Unity's NEW Input System (not legacy Input).
     /// Attach this to your player GameObject along with Spellbook and SpellExecutor.
+    /// Requires: Unity Input System package (com.unity.inputsystem)
     /// </summary>
     [RequireComponent(typeof(Spellbook))]
+    [RequireComponent(typeof(PlayerInput))]
     public class ExampleSpellCasterPlayer : MonoBehaviour, ISpellCaster
     {
         [Header("Mana System")]
@@ -37,13 +41,6 @@ namespace ModularAbilityCraftingSystem.Examples
         [Tooltip("Player level (for rune requirements)")]
         [SerializeField] private int playerLevel = 1;
 
-        [Header("Input Settings")]
-        [Tooltip("Use number keys for casting (1-6)?")]
-        [SerializeField] private bool useNumberKeys = true;
-
-        [Tooltip("Use mouse buttons? (Left = slot 0, Right = slot 1)")]
-        [SerializeField] private bool useMouseButtons = true;
-
         [Header("Debug")]
         [Tooltip("Show debug information")]
         [SerializeField] private bool showDebugInfo = false;
@@ -51,6 +48,10 @@ namespace ModularAbilityCraftingSystem.Examples
         // References
         private Spellbook spellbook;
         private Camera playerCamera;
+        private PlayerInput playerInput;
+        private InputAction[] slotActions;
+        private InputAction primaryAction;
+        private InputAction secondaryAction;
 
         // Properties
         public float CurrentMana => currentMana;
@@ -61,6 +62,7 @@ namespace ModularAbilityCraftingSystem.Examples
         {
             spellbook = GetComponent<Spellbook>();
             playerCamera = Camera.main;
+            playerInput = GetComponent<PlayerInput>();
 
             // Auto-find executor if not set
             if (executor == null)
@@ -78,15 +80,25 @@ namespace ModularAbilityCraftingSystem.Examples
                     spellSlots[i].SetExecutor(executor);
                 }
             }
+
+            // Setup input actions (New Input System)
+            SetupInputActions();
+        }
+
+        private void OnEnable()
+        {
+            EnableInputActions();
+        }
+
+        private void OnDisable()
+        {
+            DisableInputActions();
         }
 
         private void Update()
         {
             // Regenerate mana
             RegenerateMana();
-
-            // Handle input
-            HandleSpellCasting();
 
             // Debug display
             if (showDebugInfo)
@@ -107,34 +119,83 @@ namespace ModularAbilityCraftingSystem.Examples
         }
 
         /// <summary>
-        /// Handle spell casting input
+        /// Setup input actions using New Input System
         /// </summary>
-        private void HandleSpellCasting()
+        private void SetupInputActions()
         {
-            // Number keys 1-6 for spellSlots
-            if (useNumberKeys)
+            if (playerInput == null) return;
+
+            var map = playerInput.actions.FindActionMap("SpellCasting");
+            if (map == null)
             {
-                for (int i = 0; i < spellSlots.Length && i < 6; i++)
+                Debug.LogWarning("SpellCasting action map not found. Make sure SpellCastingInputActions is assigned to PlayerInput component.");
+                return;
+            }
+
+            // Setup slot actions (1-6)
+            slotActions = new InputAction[6];
+            for (int i = 0; i < 6; i++)
+            {
+                int slotIndex = i; // Capture for lambda
+                slotActions[i] = map.FindAction($"CastSlot{i + 1}");
+                if (slotActions[i] != null)
                 {
-                    if (Input.GetKeyDown(KeyCode.Alpha1 + i))
-                    {
-                        CastSpellFromSlot(i);
-                    }
+                    slotActions[i].performed += ctx => OnCastSlot(slotIndex);
                 }
             }
 
-            // Mouse buttons
-            if (useMouseButtons)
+            // Setup primary/secondary actions
+            primaryAction = map.FindAction("CastPrimary");
+            if (primaryAction != null)
             {
-                if (Input.GetMouseButtonDown(0)) // Left click
+                primaryAction.performed += ctx => OnCastSlot(0);
+            }
+
+            secondaryAction = map.FindAction("CastSecondary");
+            if (secondaryAction != null)
+            {
+                secondaryAction.performed += ctx => OnCastSlot(1);
+            }
+        }
+
+        /// <summary>
+        /// Enable input actions
+        /// </summary>
+        private void EnableInputActions()
+        {
+            if (slotActions != null)
+            {
+                foreach (var action in slotActions)
                 {
-                    CastSpellFromSlot(0);
-                }
-                if (Input.GetMouseButtonDown(1)) // Right click
-                {
-                    CastSpellFromSlot(1);
+                    action?.Enable();
                 }
             }
+            primaryAction?.Enable();
+            secondaryAction?.Enable();
+        }
+
+        /// <summary>
+        /// Disable input actions
+        /// </summary>
+        private void DisableInputActions()
+        {
+            if (slotActions != null)
+            {
+                foreach (var action in slotActions)
+                {
+                    action?.Disable();
+                }
+            }
+            primaryAction?.Disable();
+            secondaryAction?.Disable();
+        }
+
+        /// <summary>
+        /// Called when a cast slot input is triggered
+        /// </summary>
+        private void OnCastSlot(int slotIndex)
+        {
+            CastSpellFromSlot(slotIndex);
         }
 
         /// <summary>

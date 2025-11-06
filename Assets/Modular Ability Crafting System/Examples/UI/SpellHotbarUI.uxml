@@ -1,0 +1,61 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement name="HotbarContainer" class="hotbar-container">
+        <ui:Label text="Spell Hotbar" name="Title" class="hotbar-title" />
+        <ui:VisualElement name="SlotsContainer" class="slots-container">
+            <!-- Slot 0 -->
+            <ui:VisualElement name="Slot0" class="spell-slot">
+                <ui:VisualElement name="Icon0" class="spell-icon" />
+                <ui:Label text="1" name="KeyHint0" class="key-hint" />
+                <ui:Label text="" name="Cooldown0" class="cooldown-text" />
+                <ui:ProgressBar name="CooldownBar0" class="cooldown-bar" />
+            </ui:VisualElement>
+
+            <!-- Slot 1 -->
+            <ui:VisualElement name="Slot1" class="spell-slot">
+                <ui:VisualElement name="Icon1" class="spell-icon" />
+                <ui:Label text="2" name="KeyHint1" class="key-hint" />
+                <ui:Label text="" name="Cooldown1" class="cooldown-text" />
+                <ui:ProgressBar name="CooldownBar1" class="cooldown-bar" />
+            </ui:VisualElement>
+
+            <!-- Slot 2 -->
+            <ui:VisualElement name="Slot2" class="spell-slot">
+                <ui:VisualElement name="Icon2" class="spell-icon" />
+                <ui:Label text="3" name="KeyHint2" class="key-hint" />
+                <ui:Label text="" name="Cooldown2" class="cooldown-text" />
+                <ui:ProgressBar name="CooldownBar2" class="cooldown-bar" />
+            </ui:VisualElement>
+
+            <!-- Slot 3 -->
+            <ui:VisualElement name="Slot3" class="spell-slot">
+                <ui:VisualElement name="Icon3" class="spell-icon" />
+                <ui:Label text="4" name="KeyHint3" class="key-hint" />
+                <ui:Label text="" name="Cooldown3" class="cooldown-text" />
+                <ui:ProgressBar name="CooldownBar3" class="cooldown-bar" />
+            </ui:VisualElement>
+
+            <!-- Slot 4 -->
+            <ui:VisualElement name="Slot4" class="spell-slot">
+                <ui:VisualElement name="Icon4" class="spell-icon" />
+                <ui:Label text="5" name="KeyHint4" class="key-hint" />
+                <ui:Label text="" name="Cooldown4" class="cooldown-text" />
+                <ui:ProgressBar name="CooldownBar4" class="cooldown-bar" />
+            </ui:VisualElement>
+
+            <!-- Slot 5 -->
+            <ui:VisualElement name="Slot5" class="spell-slot">
+                <ui:VisualElement name="Icon5" class="spell-icon" />
+                <ui:Label text="6" name="KeyHint5" class="key-hint" />
+                <ui:Label text="" name="Cooldown5" class="cooldown-text" />
+                <ui:ProgressBar name="CooldownBar5" class="cooldown-bar" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <!-- Mana Bar -->
+        <ui:VisualElement name="ManaContainer" class="mana-container">
+            <ui:Label text="Mana" name="ManaLabel" class="mana-label" />
+            <ui:ProgressBar name="ManaBar" class="mana-bar" />
+            <ui:Label text="100 / 100" name="ManaText" class="mana-text" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
